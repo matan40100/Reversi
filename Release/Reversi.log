@@ -1,0 +1,7 @@
+﻿  Reversi.c
+E:\C\Reversi\Reversi\Reversi.c(216,33): warning C4101: 'currect_row': unreferenced local variable
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 19 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Reversi.vcxproj -> E:\C\Reversi\Release\Reversi.exe
