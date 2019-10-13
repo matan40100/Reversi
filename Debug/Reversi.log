@@ -1,1 +1,1 @@
-﻿  Reversi.vcxproj -> E:\C\Reversi\Debug\Reversi.exe
+﻿LINK : fatal error LNK1168: cannot open C:\Users\Matan\Desktop\GitHub\Reversi\Debug\Reversi.exe for writing
