@@ -10,7 +10,7 @@
 #define FREE_SPACE 254
 #define AVAILABLE_SPACE 249
 
-/*Last update : 13.10.19 19:17*/
+/*Last update : 14.10.19 00:47*/
 void create_board(char board[ROW + 2][COLUMN + 2]); //Create Board;
 void print_board(char board[ROW + 2][COLUMN + 2]); //Print Board
 int is_board_full(char board[ROW + 2][COLUMN + 2]); //Check if the board is full(1) or not(0)
@@ -50,17 +50,7 @@ int is_0_slant_left_right_down(char board[ROW + 2][COLUMN + 2], int current_row,
 int is_0_slant_right_left_up(char board[ROW + 2][COLUMN + 2], int current_row, int current_column); // (\)UP
 int is_0_slant_right_left_down(char board[ROW + 2][COLUMN + 2], int current_row, int current_column); // (\)down
 
-/*Check if there is free space in row / column / slant*/
-int is_free_space_row_down(char board[ROW + 2][COLUMN + 2], int current_row, int current_column); //Row down
-int is_free_space_row_up(char board[ROW + 2][COLUMN + 2], int current_row, int current_column); // Row up
-int is_free_space_column_right(char board[ROW + 2][COLUMN + 2], int current_row, int current_column); // Column right
-int is_free_space_column_left(char board[ROW + 2][COLUMN + 2], int current_row, int current_column); // Column left
-int is_free_space_slant_left_right_up(char board[ROW + 2][COLUMN + 2], int current_row, int current_column); // (/)UP
-int is_free_space_slant_left_right_down(char board[ROW + 2][COLUMN + 2], int current_row, int current_column); // (/)DOWN
-int is_free_space_slant_right_left_up(char board[ROW + 2][COLUMN + 2], int current_row, int current_column); // (\)UP
-int is_free_space_slant_right_left_down(char board[ROW + 2][COLUMN + 2], int current_row, int current_column); // (\)down
-
-//color
+//Color
 void red_color();
 void player_one_color_magenta();
 void player_two_color_cyan();
@@ -69,10 +59,11 @@ void reset_color();
 
 int main()
 {
-	int start_game = 0, test = 0;
 	char board[ROW + 2][COLUMN + 2];
+	int start_game = 0, test = 0;
 	printf("Press 1 to start the game or 0 to exit.\n");
 	scanf("%d", &start_game);
+
 	if (start_game)
 	{
 		player_one_color_magenta();
@@ -87,6 +78,11 @@ int main()
 		printf("Available space symbol: %c\n", (char)AVAILABLE_SPACE);
 		reset_color();
 
+		printf("\n");
+		red_color();
+		printf("If you want to quit the game type '999' in row field.\n");
+		reset_color();
+
 		create_board(board);
 
 		while (is_board_full(board) == 0)
@@ -94,8 +90,8 @@ int main()
 			player_one_turn(board);
 			player_two_turn(board);
 		}
-		print_winner(board);
 
+		print_winner(board);
 	}
 	else
 	{
@@ -160,6 +156,7 @@ void create_board(char board[ROW + 2][COLUMN + 2])
 	board[6][6] = PLAYER_ONE;
 	board[5][6] = PLAYER_TWO;
 	board[6][5] = PLAYER_TWO;
+
 }
 void print_board(char board[ROW + 2][COLUMN + 2])
 {
@@ -256,7 +253,7 @@ void print_winner(char board[ROW + 2][COLUMN + 2])
 	if (score_player_one > score_player_two)
 	{
 		red_color();
-		printf("Final Board\n");
+		printf("Final Board:\n");
 		reset_color();
 		print_board(board);
 		red_color();
@@ -269,7 +266,7 @@ void print_winner(char board[ROW + 2][COLUMN + 2])
 	else if (score_player_one < score_player_two)
 	{
 		red_color();
-		printf("Final Board\n");
+		printf("Final Board:\n");
 		reset_color();
 		print_board(board);
 		red_color();
@@ -283,7 +280,7 @@ void print_winner(char board[ROW + 2][COLUMN + 2])
 	else
 	{
 		red_color();
-		printf("Final Board\n");
+		printf("Final Board:\n");
 		reset_color();
 		print_board(board);
 		red_color();
@@ -328,32 +325,33 @@ void player_one_turn(char board[ROW + 2][COLUMN + 2])
 	player_one_color_magenta();
 	printf("Player 1(X): enter row number:\n");
 	scanf("%d", &row_number);
-	printf("Player 1(X): enter colunm number:\n");
-	scanf("%d", &column_number);
-	reset_color();
-
 	if (row_number == 999)
 	{
 		red_color();
 		printf("Player one(X) choose to exit");
 		exit();
 	}
-
-	if (legal_move(board, row_number, column_number))
-	{
-		board[row_number + 1][column_number + 1] = PLAYER_ONE;
-		clear_all_mark(board);
-		update_board_x(board, row_number + 1, column_number + 1, PLAYER_ONE);
-
-	}
 	else
 	{
-		red_color();
-		printf("\n");
-		printf("Invalid move !\n");
-		printf("Try again\n");
+		printf("Player 1(X): enter colunm number:\n");
+		scanf("%d", &column_number);
 		reset_color();
-		player_one_turn(board);
+
+		if (legal_move(board, row_number, column_number))
+		{
+			board[row_number + 1][column_number + 1] = PLAYER_ONE;
+			clear_all_mark(board);
+			update_board_x(board, row_number + 1, column_number + 1, PLAYER_ONE);
+		}
+		else
+		{
+			red_color();
+			printf("\n");
+			printf("Invalid move !\n");
+			printf("Try again\n");
+			reset_color();
+			player_one_turn(board);
+		}
 	}
 }
 void player_two_turn(char board[ROW + 2][COLUMN + 2])
@@ -377,35 +375,34 @@ void player_two_turn(char board[ROW + 2][COLUMN + 2])
 	player_two_color_cyan();
 	printf("Player 2(0): enter row number:\n");
 	scanf("%d", &row_number);
-	printf("Player 2(0): enter colunm number:\n");
-	scanf("%d", &column_number);
-	reset_color();
-
 	if (row_number == 999)
 	{
 		red_color();
 		printf("Player two(0) choose to exit");
 		exit();
 	}
-
-	if (legal_move(board, row_number, column_number) == 1)
-	{
-		board[row_number + 1][column_number + 1] = PLAYER_TWO;
-		clear_all_mark(board);
-		update_board_0(board, row_number + 1, column_number + 1, PLAYER_TWO);
-
-
-
-	}
 	else
 	{
-		red_color();
-		printf("\n");
-		printf("Invalid move !\n");
-		printf("Try again\n");
-		printf("\n");
+		printf("Player 2(0): enter colunm number:\n");
+		scanf("%d", &column_number);
 		reset_color();
-		player_two_turn(board);
+
+		if (legal_move(board, row_number, column_number) == 1)
+		{
+			board[row_number + 1][column_number + 1] = PLAYER_TWO;
+			clear_all_mark(board);
+			update_board_0(board, row_number + 1, column_number + 1, PLAYER_TWO);
+		}
+		else
+		{
+			red_color();
+			printf("\n");
+			printf("Invalid move !\n");
+			printf("Try again\n");
+			printf("\n");
+			reset_color();
+			player_two_turn(board);
+		}
 	}
 }
 int legal_move(char board[ROW + 2][COLUMN + 2], int row, int column)
@@ -455,7 +452,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 							board[current_row][column_number] = AVAILABLE_SPACE;
 							break;
 						}
-
+						if (board[current_row][column_number] == (char)FREE_SPACE || board[current_row][column_number] == (char)AVAILABLE_SPACE)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -499,7 +499,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 							board[current_row][column_number] = AVAILABLE_SPACE;
 							break;
 						}
-
+						if (board[current_row][column_number] == (char)FREE_SPACE || board[current_row][column_number] == (char)AVAILABLE_SPACE)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -543,6 +546,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 							board[row_number][current_column] = AVAILABLE_SPACE;
 							break;
 						}
+						if (board[row_number][current_column] == (char)FREE_SPACE || board[row_number][current_column] == (char)AVAILABLE_SPACE)
+						{
+							break;
+						}
 
 					}
 				}
@@ -561,7 +568,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 							board[row_number][current_column] = AVAILABLE_SPACE;
 							break;
 						}
-
+						if (board[row_number][current_column] == (char)FREE_SPACE)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -587,6 +597,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 							board[row_number][current_column] = AVAILABLE_SPACE;
 							break;
 						}
+						if (board[row_number][current_column] == (char)FREE_SPACE || board[row_number][current_column] == (char)AVAILABLE_SPACE)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -603,6 +617,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 						if (board[row_number][current_column] == (char)FREE_SPACE && board[row_number][current_column + 1] == (char)PLAYER_ONE)
 						{
 							board[row_number][current_column] = AVAILABLE_SPACE;
+							break;
+						}
+						if (board[row_number][current_column] == (char)FREE_SPACE)
+						{
 							break;
 						}
 					}
@@ -633,6 +651,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 							board[current_row][current_column] = AVAILABLE_SPACE;
 							break;
 						}
+						if (board[current_row][current_column] == (char)FREE_SPACE || board[current_row][current_column] == (char)AVAILABLE_SPACE)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -651,6 +673,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 						if (board[current_row][current_column] == (char)FREE_SPACE && board[current_row - 1][current_column + 1] == (char)PLAYER_ONE)
 						{
 							board[current_row][current_column] = AVAILABLE_SPACE;
+							break;
+						}
+						if (board[current_row][current_column] == (char)FREE_SPACE)
+						{
 							break;
 						}
 					}
@@ -680,6 +706,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 							board[current_row][current_column] = AVAILABLE_SPACE;
 							break;
 						}
+						if (board[current_row][current_column] == (char)FREE_SPACE || board[current_row][current_column] == (char)AVAILABLE_SPACE)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -698,6 +728,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 						if (board[current_row][current_column] == (char)FREE_SPACE && board[current_row + 1][current_column - 1] == (char)PLAYER_ONE)
 						{
 							board[current_row][current_column] = AVAILABLE_SPACE;
+							break;
+						}
+						if (board[current_row][current_column] == (char)FREE_SPACE)
+						{
 							break;
 						}
 					}
@@ -727,6 +761,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 							board[current_row][current_column] = AVAILABLE_SPACE;
 							break;
 						}
+						if (board[current_row][current_column] == (char)FREE_SPACE || board[current_row][current_column] == (char)AVAILABLE_SPACE)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -745,6 +783,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 						if (board[current_row][current_column] == (char)FREE_SPACE && board[current_row - 1][current_column - 1] == (char)PLAYER_ONE)
 						{
 							board[current_row][current_column] = AVAILABLE_SPACE;
+							break;
+						}
+						if (board[current_row][current_column] == (char)FREE_SPACE)
+						{
 							break;
 						}
 					}
@@ -774,6 +816,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 							board[current_row][current_column] = AVAILABLE_SPACE;
 							break;
 						}
+						if (board[current_row][current_column] == (char)FREE_SPACE || board[current_row][current_column] == (char)AVAILABLE_SPACE)
+						{
+							break;
+						}
 					}
 				}
 			}
@@ -792,6 +838,10 @@ void mark_available_space_for_player(char board[ROW + 2][COLUMN + 2], int symbol
 						if (board[current_row][current_column] == (char)FREE_SPACE && board[current_row + 1][current_column + 1] == (char)PLAYER_ONE)
 						{
 							board[current_row][current_column] = AVAILABLE_SPACE;
+							break;
+						}
+						if (board[current_row][current_column] == (char)FREE_SPACE)
+						{
 							break;
 						}
 					}
@@ -1258,104 +1308,6 @@ int is_0_slant_right_left_down(char board[ROW + 2][COLUMN + 2], int current_row,
 	for (row_number = current_row + 1, column_number = current_column + 1; row_number <= ROW + 2 && column_number <= COLUMN + 2; row_number++, column_number++)
 	{
 		if (board[row_number][column_number] == (char)PLAYER_TWO)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-
-
-int is_free_space_row_down(char board[ROW + 2][COLUMN + 2], int current_row, int current_column)
-{
-	int row_number;
-	for (row_number = current_row + 1; row_number < ROW + 2; row_number++)
-	{
-		if (board[row_number][current_column] == (char)FREE_SPACE)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-int is_free_space_row_up(char board[ROW + 2][COLUMN + 2], int current_row, int current_column)
-{
-	int row_number;
-	for (row_number = current_row - 1; row_number > 2; row_number--)
-	{
-		if (board[row_number][current_column] == (char)FREE_SPACE)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-int is_free_space_column_right(char board[ROW + 2][COLUMN + 2], int current_row, int current_column)
-{
-	int column_number;
-	for (column_number = current_column + 1; column_number < COLUMN + 2; column_number++)
-	{
-		if (board[current_row][column_number] == (char)FREE_SPACE)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-int is_free_space_column_left(char board[ROW + 2][COLUMN + 2], int current_row, int current_column)
-{
-	int column_number;
-	for (column_number = current_column - 1; column_number > 2; column_number--)
-	{
-		if (board[current_row][column_number] == (char)FREE_SPACE)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-int is_free_space_slant_left_right_up(char board[ROW + 2][COLUMN + 2], int current_row, int current_column) // (/)UP
-{
-	int row_number, column_number;
-	for (row_number = current_row - 1, column_number = current_column + 1; row_number > 2 && column_number < COLUMN + 2; row_number--, column_number++)
-	{
-		if (board[row_number][column_number] == (char)FREE_SPACE)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-int is_free_space_slant_left_right_down(char board[ROW + 2][COLUMN + 2], int current_row, int current_column) // (/)DOWN
-{
-	int row_number, column_number;
-	for (row_number = current_row + 1, column_number = current_column - 1; row_number < ROW + 2 && column_number > 2; row_number++, column_number--)
-	{
-		if (board[row_number][column_number] == (char)FREE_SPACE)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-int is_free_space_slant_right_left_up(char board[ROW + 2][COLUMN + 2], int current_row, int current_column) // (\)UP
-{
-	int row_number, column_number;
-	for (row_number = current_row - 1, column_number = current_column - 1; row_number > 2 && column_number > 2; row_number--, column_number--)
-	{
-		if (board[row_number][column_number] == (char)FREE_SPACE)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-int is_free_space_slant_right_left_down(char board[ROW + 2][COLUMN + 2], int current_row, int current_column) // (\)down
-{
-	int row_number, column_number;
-	for (row_number = current_row + 1, column_number = current_column + 1; row_number < ROW + 2 && column_number < COLUMN + 2; row_number++, column_number++)
-	{
-		if (board[row_number][column_number] == (char)FREE_SPACE)
 		{
 			return 1;
 		}
