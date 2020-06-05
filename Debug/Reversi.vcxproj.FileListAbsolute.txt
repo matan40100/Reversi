@@ -1,0 +1,2 @@
+C:\Users\Matan\Desktop\GitHub\Reversi\Reversi\Debug\Reversi.exe
+C:\Users\Matan\Desktop\GitHub\Reversi\Reversi\Debug\Reversi.pdb
